@@ -16,7 +16,7 @@ namespace IdentityModel.AspNetCore
         private readonly TokenEndpointService _service;
         private readonly AutomaticTokenManagementOptions _options;
         private readonly ILogger _logger;
-        private readonly ISystemClock _clock;
+        private readonly TimeProvider _clock;
         
         private static readonly ConcurrentDictionary<string, bool> _pendingRefreshTokenRequests =
             new ConcurrentDictionary<string, bool>();
@@ -25,7 +25,7 @@ namespace IdentityModel.AspNetCore
             TokenEndpointService service,
             IOptions<AutomaticTokenManagementOptions> options,
             ILogger<AutomaticTokenManagementCookieEvents> logger,
-            ISystemClock clock)
+            TimeProvider clock)
         {
             _service = service;
             _options = options.Value;
