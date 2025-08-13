@@ -48,10 +48,10 @@ namespace IdentityServer4.Services
 
             var uint32Buffer = new byte[8];
 
-            using (var rng = new RNGCryptoServiceProvider())
-            {
+
                 while (true)
                 {
+                    var rng = RandomNumberGenerator.Create();
                     rng.GetBytes(uint32Buffer);
                     var rand = BitConverter.ToUInt32(uint32Buffer, 0);
 
@@ -62,7 +62,6 @@ namespace IdentityServer4.Services
                         return (int)(minValue + rand % diff);
                     }
                 }
-            }
         }
     }
 }
