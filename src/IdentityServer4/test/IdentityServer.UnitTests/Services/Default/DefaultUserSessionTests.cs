@@ -14,6 +14,7 @@ using IdentityServer4.Configuration;
 using IdentityServer4.Extensions;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using Xunit;
 
 namespace IdentityServer.UnitTests.Services.Default
@@ -148,7 +149,7 @@ namespace IdentityServer.UnitTests.Services.Default
             _mockHttpContext.HttpContext.Response.Headers.Clear();
 
             string cookie = cookieContainer.GetCookieHeader(new Uri("http://server"));
-            _mockHttpContext.HttpContext.Request.Headers.Add("Cookie", cookie);
+            _mockHttpContext.HttpContext.Request.Headers.Append("Cookie", cookie);
 
             await _subject.RemoveSessionIdCookieAsync();
 
