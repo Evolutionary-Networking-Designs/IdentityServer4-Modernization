@@ -493,7 +493,6 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
             var someArr = new[] { "a", "b", "c" };
             var someArrJson = JsonConvert.SerializeObject(someArr);
 
-
             var requestJwt = CreateRequestJwt(
                 issuer: _client.ClientId,
                 audience: IdentityServerPipeline.BaseUrl,
