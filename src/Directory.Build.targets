@@ -5,7 +5,7 @@
     <ExtensionsVersion>9.0.8</ExtensionsVersion>
     <EntityFrameworkVersion>8.0.19</EntityFrameworkVersion>
     
-    <IdentityServerVersion>4.1.2-*</IdentityServerVersion>
+    <IdentityServerVersion>5.0.0-*</IdentityServerVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -43,7 +43,7 @@
     <PackageReference Update="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="8.13.1" />
     <PackageReference Update="System.IdentityModel.Tokens.Jwt" Version="8.13.1" />
     <PackageReference Update="System.Security.Principal.Windows" Version="5.0.0" />
-    <PackageReference Update="AutoMapper" Version="15.0.1" />
+    <PackageReference Update="AutoMapper" Version="[10.0.0,11.0)" />
     
     <!--microsoft asp.net core -->
     <PackageReference Update="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="$(FrameworkVersion)" />
