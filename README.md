@@ -1,7 +1,11 @@
 # Security Vulnerability Found
-IdentityServer4 contains a known Open Redirect vulnerability (CVE-2024-39694) that we do not intend to address in IdentityServer4. Please see [the security advisory](https://github.com/IdentityServer/IdentityServer4/security/advisories/GHSA-55p7-v223-x366) for more details and consider upgrading to [Duende.IdentityServer](www.duendesoftware.com) to receive updates.
+IdentityServer4 contains a known Open Redirect vulnerability (CVE-2024-39694). Please see [the security advisory](https://github.com/IdentityServer/IdentityServer4/security/advisories/GHSA-55p7-v223-x366). This is currently being worked as the project is being updated.
 
 # Important update
+
+## Alpha Software
+
+The project is currently concerned alpha as of 2025-08-14 as the project is undergoing the rewrite for .NET 8.0 support.
 
 ## 2025-08-14
 
