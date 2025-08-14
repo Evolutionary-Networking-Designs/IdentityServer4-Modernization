@@ -176,6 +176,7 @@ namespace IdentityServer.UnitTests.Services.Default
         public async Task RequiresConsentAsync_expired_consent_should_require_consent()
         {
             now = DateTime.UtcNow;
+            _clock.UtcNowFunc = () => now;
 
             var scopes = new[] { new ParsedScopeValue("foo"), new ParsedScopeValue("bar") };
             _client.ConsentLifetime = 2;
@@ -183,6 +184,8 @@ namespace IdentityServer.UnitTests.Services.Default
             await _subject.UpdateConsentAsync(_user, _client, scopes);
 
             now = now.AddSeconds(3);
+            _clock.UtcNowFunc = () => now;
+            
 
             var result = await _subject.RequiresConsentAsync(_user, _client, scopes);
 
@@ -193,6 +196,7 @@ namespace IdentityServer.UnitTests.Services.Default
         public async Task RequiresConsentAsync_expired_consent_should_remove_consent()
         {
             now = DateTime.UtcNow;
+            _clock.UtcNowFunc = () => now;
 
             var scopes = new[] { new ParsedScopeValue("foo"), new ParsedScopeValue("bar") };
             _client.ConsentLifetime = 2;
@@ -200,6 +204,7 @@ namespace IdentityServer.UnitTests.Services.Default
             await _subject.UpdateConsentAsync(_user, _client, scopes);
 
             now = now.AddSeconds(3);
+            _clock.UtcNowFunc = () => now;
 
             await _subject.RequiresConsentAsync(_user, _client, scopes);
 

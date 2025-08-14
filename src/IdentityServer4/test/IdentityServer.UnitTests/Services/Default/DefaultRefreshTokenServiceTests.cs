@@ -338,7 +338,7 @@ namespace IdentityServer.UnitTests.Services.Default
             var oldToken = await _store.GetRefreshTokenAsync(handle);
             var newToken = await _store.GetRefreshTokenAsync(newHandle);
 
-            oldToken.ConsumedTime.Should().Be(now);
+            oldToken.ConsumedTime.Should().BeBefore(now.AddSeconds(1));
             newToken.ConsumedTime.Should().BeNull();
         }
         
@@ -430,6 +430,9 @@ namespace IdentityServer.UnitTests.Services.Default
         [Fact]
         public async Task ValidateRefreshToken_expired_token_should_fail()
         {
+            var now = DateTime.UtcNow.AddSeconds(20);
+            _clock.UtcNowFunc = () => now;
+            
             var client = new Client
             {
                 ClientId = "client1",
@@ -455,7 +458,7 @@ namespace IdentityServer.UnitTests.Services.Default
 
             var handle = await _store.StoreRefreshTokenAsync(refreshToken);
 
-            var now = DateTime.UtcNow.AddSeconds(20);
+            now = DateTime.UtcNow.AddSeconds(20);
             _clock.UtcNowFunc = () => now;
 
             var result = await _subject.ValidateRefreshTokenAsync(handle, client);

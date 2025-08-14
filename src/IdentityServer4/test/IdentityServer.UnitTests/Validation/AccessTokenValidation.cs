@@ -127,17 +127,14 @@ namespace IdentityServer.UnitTests.Validation
         public async Task Expired_Reference_Token()
         {
             now = DateTime.UtcNow;
-
+            var expired = now.AddSeconds(3);
+            _clock.UtcNowFunc = () => expired;
             var store = Factory.CreateReferenceTokenStore();
             var validator = Factory.CreateTokenValidator(store, clock:_clock);
-
             var token = TokenFactory.CreateAccessToken(new Client { ClientId = "roclient" }, "valid", 2, "read", "write");
             token.CreationTime = now;
 
             var handle = await store.StoreReferenceTokenAsync(token);
-
-            now = now.AddSeconds(3);
-
             var result = await validator.ValidateAccessTokenAsync(handle);
 
             result.IsError.Should().BeTrue();

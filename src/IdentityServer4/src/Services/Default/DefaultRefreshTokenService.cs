@@ -39,7 +39,7 @@ namespace IdentityServer4.Services
         /// <summary>
         /// The clock
         /// </summary>
-        protected TimeProvider Clock { get; }
+        protected AuthClock Clock { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultRefreshTokenService" /> class.
@@ -54,7 +54,10 @@ namespace IdentityServer4.Services
         {
             RefreshTokenStore = refreshTokenStore;
             Profile = profile;
-            Clock = clock;
+            if (clock is AuthClock)
+                Clock = (AuthClock) clock;
+            else
+                Clock = new AuthClock(clock);
 
             Logger = logger;
         }
@@ -87,7 +90,8 @@ namespace IdentityServer4.Services
             /////////////////////////////////////////////
             // check if refresh token has expired
             /////////////////////////////////////////////
-            if (refreshToken.CreationTime.HasExceeded(refreshToken.Lifetime, Clock.GetUtcNow().DateTime))
+            
+            if (refreshToken.CreationTime.HasExceeded(refreshToken.Lifetime, Clock.UtcNow.DateTime))
             {
                 Logger.LogWarning("Refresh token has expired.");
                 return invalidGrant;

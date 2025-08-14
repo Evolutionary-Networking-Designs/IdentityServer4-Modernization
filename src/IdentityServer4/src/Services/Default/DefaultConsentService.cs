@@ -29,7 +29,7 @@ namespace IdentityServer4.Services
         /// <summary>
         ///  The clock
         /// </summary>
-        protected readonly TimeProvider Clock;
+        protected readonly AuthClock Clock;
 
         /// <summary>
         /// The logger
@@ -45,7 +45,11 @@ namespace IdentityServer4.Services
         /// <exception cref="System.ArgumentNullException">store</exception>
         public DefaultConsentService(TimeProvider clock, IUserConsentStore userConsentStore, ILogger<DefaultConsentService> logger)
         {
-            Clock = clock;
+            if (clock is AuthClock)
+                Clock = (AuthClock) clock;
+            else
+                Clock = new AuthClock(clock);
+            
             UserConsentStore = userConsentStore;
             Logger = logger;
         }
@@ -111,7 +115,7 @@ namespace IdentityServer4.Services
                 return true;
             }
 
-            if (consent.Expiration.HasExpired(Clock.GetUtcNow().UtcDateTime))
+            if (consent.Expiration.HasExpired(Clock.UtcNow.UtcDateTime))
             {
                 Logger.LogDebug("Consent found in consent store is expired, consent is required");
                 await UserConsentStore.RemoveUserConsentAsync(consent.SubjectId, consent.ClientId);

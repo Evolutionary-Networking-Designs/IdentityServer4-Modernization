@@ -32,7 +32,7 @@ namespace IdentityServer4.Validation
         private readonly IClientStore _clients;
         private readonly IProfileService _profile;
         private readonly IKeyMaterialService _keys;
-        private readonly TimeProvider _clock;
+        private readonly AuthClock _clock;
         private readonly TokenValidationLog _log;
 
         public TokenValidator(
@@ -54,7 +54,10 @@ namespace IdentityServer4.Validation
             _referenceTokenStore = referenceTokenStore;
             _customValidator = customValidator;
             _keys = keys;
-            _clock = clock;
+            if (clock is AuthClock)
+                _clock = (AuthClock) clock;
+            else
+                _clock = new AuthClock(clock);
             _logger = logger;
 
             _log = new TokenValidationLog();
@@ -359,7 +362,7 @@ namespace IdentityServer4.Validation
                 return Invalid(OidcConstants.ProtectedResourceErrors.InvalidToken);
             }
 
-            if (token.CreationTime.HasExceeded(token.Lifetime, _clock.GetUtcNow().UtcDateTime))
+            if (token.CreationTime.HasExceeded(token.Lifetime, _clock.UtcNow.UtcDateTime))
             {
                 LogError("Token expired.");
 

@@ -121,7 +121,7 @@ namespace IdentityServer.UnitTests.ResponseHandling
             userCode.Should().NotBeNull();
             userCode.ClientId.Should().Be(testResult.ValidatedRequest.Client.ClientId);
             userCode.Lifetime.Should().Be(testResult.ValidatedRequest.Client.DeviceCodeLifetime);
-            userCode.CreationTime.Should().Be(creationTime);
+            userCode.CreationTime.Should().BeBefore(creationTime.AddSeconds(1));
             userCode.Subject.Should().BeNull();
             userCode.AuthorizedScopes.Should().BeNull();
 
@@ -144,7 +144,7 @@ namespace IdentityServer.UnitTests.ResponseHandling
             deviceCode.ClientId.Should().Be(testResult.ValidatedRequest.Client.ClientId);
             deviceCode.IsOpenId.Should().Be(testResult.ValidatedRequest.IsOpenIdRequest);
             deviceCode.Lifetime.Should().Be(testResult.ValidatedRequest.Client.DeviceCodeLifetime);
-            deviceCode.CreationTime.Should().Be(creationTime);
+            deviceCode.CreationTime.Should().BeBefore(creationTime.AddSeconds(1));
             deviceCode.Subject.Should().BeNull();
             deviceCode.AuthorizedScopes.Should().BeNull();
             

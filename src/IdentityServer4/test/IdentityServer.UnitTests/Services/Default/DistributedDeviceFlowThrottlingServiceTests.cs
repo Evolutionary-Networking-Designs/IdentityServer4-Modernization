@@ -26,6 +26,7 @@ namespace IdentityServer.UnitTests.Services.Default
 
         private const string CacheKey = "devicecode_";
         private readonly DateTime testDate = new DateTime(2018, 06, 28, 13, 37, 42);
+        private readonly StubClock _clock = new StubClock();
 
         [Fact]
         public async Task First_Poll()
@@ -46,8 +47,8 @@ namespace IdentityServer.UnitTests.Services.Default
             var handle = Guid.NewGuid().ToString();
             var service = new DistributedDeviceFlowThrottlingService(cache, new StubClock { UtcNowFunc = () => testDate }, options);
 
-            cache.Set(CacheKey + handle, Encoding.UTF8.GetBytes(testDate.AddSeconds(-1).ToString("O")));
-
+            var newDate = testDate.AddSeconds(-1);
+            cache.Set(CacheKey + handle, Encoding.UTF8.GetBytes(newDate.ToString("O")));
             var result = await service.ShouldSlowDown(handle, deviceCode);
 
             result.Should().BeTrue();
@@ -59,10 +60,12 @@ namespace IdentityServer.UnitTests.Services.Default
         public async Task Second_Poll_After_Interval()
         {
             var handle = Guid.NewGuid().ToString();
+
+            var newDate = testDate.AddSeconds(-deviceCode.Lifetime - 1);
             
             var service = new DistributedDeviceFlowThrottlingService(cache, new StubClock { UtcNowFunc = () => testDate }, options);
 
-            cache.Set($"devicecode_{handle}", Encoding.UTF8.GetBytes(testDate.AddSeconds(-deviceCode.Lifetime - 1).ToString("O")));
+            cache.Set($"{CacheKey}{handle}", Encoding.UTF8.GetBytes(newDate.ToString("O")));
 
             var result = await service.ShouldSlowDown(handle, deviceCode);
 
