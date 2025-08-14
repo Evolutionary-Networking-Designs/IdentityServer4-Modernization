@@ -42,8 +42,6 @@ Updated documentation is currently being worked on
 ## Bug reports and feature requests
 Please use the [issue tracker](https://github.com/IdentityServer/IdentityServer4/issues) for that. 
 
-You can see a list of our current sponsors [here](https://github.com/IdentityServer/IdentityServer4/blob/main/SPONSORS.md) - and for companies we have some nice advertisement options as well.
-
 ## Acknowledgements
 IdentityServer4 is built using the following great open source projects and free services:
 
