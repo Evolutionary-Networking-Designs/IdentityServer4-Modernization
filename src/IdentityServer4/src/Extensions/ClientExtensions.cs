@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace IdentityServer4.Models
@@ -42,10 +43,25 @@ namespace IdentityServer4.Models
                                 .ToList();
             keys.AddRange(certificates);
 
-            var jwks = secretList
-                        .Where(s => s.Type == IdentityServerConstants.SecretTypes.JsonWebKey)
-                        .Select(s => new Microsoft.IdentityModel.Tokens.JsonWebKey(s.Value))
-                        .ToList();
+            //var jwks = secretList
+            //            .Where(s => s.Type == IdentityServerConstants.SecretTypes.JsonWebKey)
+            //            .Select(s => new Microsoft.IdentityModel.Tokens.JsonWebKey(s.Value))
+            //            .ToList();
+
+            var jwkList = secretList
+                .Where(s => s.Type == IdentityServerConstants.SecretTypes.JsonWebKey)
+                .ToList();
+
+            var jwks = new List<Microsoft.IdentityModel.Tokens.JsonWebKey>();
+            
+            foreach (var secret in jwkList)
+            {
+                var jsonData = secret.Value;
+                jsonData = jsonData.Replace("'","\"");
+                var jwk = new Microsoft.IdentityModel.Tokens.JsonWebKey(jsonData);
+                jwks.Add(jwk);
+            }
+            
             keys.AddRange(jwks);
 
             return Task.FromResult(keys);

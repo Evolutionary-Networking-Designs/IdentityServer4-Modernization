@@ -383,15 +383,15 @@ namespace IdentityServer4.ResponseHandling
 
                         var rsaJsonWebKey = new Models.JsonWebKey
                         {
-                            kty = "RSA",
-                            use = "sig",
-                            kid = x509Key.KeyId,
-                            x5t = thumbprint,
-                            e = exponent,
-                            n = modulus,
-                            x5c = new[] { cert64 },
-                            alg = key.SigningAlgorithm
+                            Kty = "RSA",
+                            Use = "sig",
+                            Kid = x509Key.KeyId,
+                            X5t = thumbprint,
+                            E = exponent,
+                            N = modulus,
+                            Alg = key.SigningAlgorithm
                         };
+                        rsaJsonWebKey.X5c.Add(cert64);
                         webKeys.Add(rsaJsonWebKey);
                     }
                     else if (x509Key.PublicKey is ECDsa ecdsa)
@@ -402,16 +402,16 @@ namespace IdentityServer4.ResponseHandling
 
                         var ecdsaJsonWebKey = new Models.JsonWebKey
                         {
-                            kty = "EC",
-                            use = "sig",
-                            kid = x509Key.KeyId,
-                            x5t = thumbprint,
-                            x = x,
-                            y = y,
-                            crv = CryptoHelper.GetCrvValueFromCurve(parameters.Curve),
-                            x5c = new[] { cert64 },
-                            alg = key.SigningAlgorithm
+                            Kty = "EC",
+                            Use = "sig",
+                            Kid = x509Key.KeyId,
+                            X5t = thumbprint,
+                            X = x,
+                            Y = y,
+                            Crv = CryptoHelper.GetCrvValueFromCurve(parameters.Curve),
+                            Alg = key.SigningAlgorithm
                         };
+                        ecdsaJsonWebKey.X5c.Add(cert64);
                         webKeys.Add(ecdsaJsonWebKey);
                     }
                     else
@@ -427,12 +427,12 @@ namespace IdentityServer4.ResponseHandling
 
                     var webKey = new Models.JsonWebKey
                     {
-                        kty = "RSA",
-                        use = "sig",
-                        kid = rsaKey.KeyId,
-                        e = exponent,
-                        n = modulus,
-                        alg = key.SigningAlgorithm
+                        Kty = "RSA",
+                        Use = "sig",
+                        Kid = rsaKey.KeyId,
+                        E = exponent,
+                        N = modulus,
+                        Alg = key.SigningAlgorithm
                     };
 
                     webKeys.Add(webKey);
@@ -445,13 +445,13 @@ namespace IdentityServer4.ResponseHandling
 
                     var ecdsaJsonWebKey = new Models.JsonWebKey
                     {
-                        kty = "EC",
-                        use = "sig",
-                        kid = ecdsaKey.KeyId,
-                        x = x,
-                        y = y,
-                        crv = CryptoHelper.GetCrvValueFromCurve(parameters.Curve),
-                        alg = key.SigningAlgorithm
+                        Kty = "EC",
+                        Use = "sig",
+                        Kid = ecdsaKey.KeyId,
+                        X = x,
+                        Y = y,
+                        Crv = CryptoHelper.GetCrvValueFromCurve(parameters.Curve),
+                        Alg = key.SigningAlgorithm
                     };
                     webKeys.Add(ecdsaJsonWebKey);
                 }
@@ -459,18 +459,22 @@ namespace IdentityServer4.ResponseHandling
                 {
                     var webKey = new Models.JsonWebKey
                     {
-                        kty = jsonWebKey.Kty,
-                        use = jsonWebKey.Use ?? "sig",
-                        kid = jsonWebKey.Kid,
-                        x5t = jsonWebKey.X5t,
-                        e = jsonWebKey.E,
-                        n = jsonWebKey.N,
-                        x5c = jsonWebKey.X5c?.Count == 0 ? null : jsonWebKey.X5c.ToArray(),
-                        alg = jsonWebKey.Alg,
-                        crv = jsonWebKey.Crv,
-                        x = jsonWebKey.X,
-                        y = jsonWebKey.Y
+                        Kty = jsonWebKey.Kty,
+                        Use = jsonWebKey.Use ?? "sig",
+                        Kid = jsonWebKey.Kid,
+                        X5t = jsonWebKey.X5t,
+                        E = jsonWebKey.E,
+                        N = jsonWebKey.N,
+                        Alg = jsonWebKey.Alg,
+                        Crv = jsonWebKey.Crv,
+                        X = jsonWebKey.X,
+                        Y = jsonWebKey.Y
                     };
+                    if (jsonWebKey.X5c?.Count > 0)
+                        foreach (var entry in jsonWebKey.X5c)
+                        {
+                            jsonWebKey.X5c.Add(entry);
+                        }
 
                     webKeys.Add(webKey);
                 }
